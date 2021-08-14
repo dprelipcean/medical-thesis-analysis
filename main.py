@@ -40,9 +40,9 @@ dict = {
 
 plot_customization = {
     "SEX": [2, [-0.5, 1.5]],
-    "VARSTA": [10, [-0.5, 100.5]],
-    "INALTIME": [20, [-0.5, 20.5]],
-    "GREUTATE": [20, [-0.5, 20.5]],
+    "VARSTA": [7, [19.5, 90.5]],
+    "INALTIME": [5, [139.5, 189.5]],
+    "GREUTATE": [7, [44.5, 114.5]],
     "FUMATOR": [2, [-0.5, 1.5]],
     "DIABET": [2, [-0.5, 1.5]],
     "INFARCT": [2, [-0.5, 1.5]],
@@ -62,9 +62,11 @@ df.rename(columns=dict,
 keys = df.columns.values
 
 for key1 in keys:
+    # if key1 not in ["GREUTATE"]:
+    #     continue
     for key2 in keys:
-        if key2 in ["SEX", "VARSTA", "INALTIME", "GREUTATE", "FUMATOR", "DIABET", "INFARCT", "ANTIDEPRESIVE", "MEDICAMENTE"]:
-            continue
+        # if key2 in ["SEX", "VARSTA", "INALTIME", "GREUTATE", "FUMATOR", "DIABET", "INFARCT", "ANTIDEPRESIVE", "MEDICAMENTE"]:
+        #     continue
         data_x = list(df[key1])
         data_y = list(df[key2])
 
@@ -77,16 +79,33 @@ for key1 in keys:
             cmap='Blues'
         )
 
+        if key1 in ["VARSTA", "GREUTATE", "INALTIME"]:
+            shift_x = 5
+        else:
+            shift_x = 0.5
+
+        if key2 in ["VARSTA", "GREUTATE", "INALTIME"]:
+            shift_y = 5
+        else:
+            shift_y = 0.5
+
         for i in range(len(ybins) - 1):
             for j in range(len(xbins) - 1):
-                plt.text(xbins[j] + 0.5, ybins[i] + 0.5, hist.T[i, j],
+                plt.text(xbins[j] + shift_x, ybins[i] + shift_y, int(hist.T[i, j]),
                         color="orange", ha="center", va="center", fontweight="bold")
 
         plt.xlabel(key1)
         plt.ylabel(key2)
 
-        plt.xticks(range(plot_customization[key1][0]))
-        plt.yticks(range(plot_customization[key2][0]))
+        if key1 in ["VARSTA", "GREUTATE", "INALTIME"]:
+            plt.xticks(range(int(plot_customization[key1][1][0]+1), int(plot_customization[key1][1][1]+1), 10))
+        else:
+            plt.xticks(range(plot_customization[key1][0]))
+
+        if key2 in ["VARSTA", "GREUTATE", "INALTIME"]:
+            plt.yticks(range(int(plot_customization[key2][1][0]+1), int(plot_customization[key2][1][1]+1), 10))
+        else:
+            plt.yticks(range(plot_customization[key2][0]))
 
         plt.colorbar()
         # plt.show()
